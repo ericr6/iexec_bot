@@ -11,7 +11,8 @@ if __name__ == "__main__":
     info = parser.get_info()
 
     # init
-    orderbook = Orderlist(info["category"], nbworks=info["nbtasks"], simulate=info["simulate"])
+    orderbook = Orderlist(info["category"], nbworks=info["nbtasks"], simulate=info["simulate"],
+                          log=info["log"], logfile=info["logfile"])
     while 1:
         orderbook.update()
         orderbook.submit()

@@ -1,7 +1,8 @@
 
 import sys
-from optparse import OptionParser, OptionGroup
-from pathlib import Path
+from optparse import OptionParser, OptionGroup, SUPPRESS_HELP
+
+import os.path
 
 
 class Argparser:
@@ -20,15 +21,19 @@ class Argparser:
         _parser.add_option('--nbtasks', dest='nbtasks', type=int, help='Select the number of works')
         _parser.add_option('--pollingtime', dest='pollingtime', type=int, help='Select the polling time in second,'
                                                                                ' default=50s', default=50)
-        _parser.add_option('--cat_3', dest='cat_3', help='Select the category 3', action="store_true", default=False)
-        _parser.add_option('--cat_4', dest='cat_4', help='Select the category 4', action="store_true", default=False)
-        _parser.add_option('--cat_5', dest='cat_5', help='Select the category 5', action="store_true", default=False)
+        _parser.add_option('--cat_3', dest='cat_3', help='Select the category 3,4,5 with --cat_3 --cat_4 --cat_5',
+                           action="store_true", default=False)
+        _parser.add_option('--cat_4', dest='cat_4', help=SUPPRESS_HELP, action="store_true", default=False)
+        _parser.add_option('--cat_5', dest='cat_5', help=SUPPRESS_HELP, action="store_true", default=False)
 
         # Optional arguments
         _group = OptionGroup(_parser, title="Additional options")
         _group.add_option('--simulate', dest='simulate',
                           help='Do not buy the order, just simulate all actions',
                           action="store_true", default=False)
+        _group.add_option('--logfile', dest='logfile', help=' Save information in log file', default=False)
+
+        _parser.add_option_group(_group)
 
         if len(sys.argv) < 2:
             _parser.print_help()
@@ -42,7 +47,14 @@ class Argparser:
             def invalid_opt_message(_optname, _optval, extra_comment=""):
                 return "option --" + _optname + " " + _optval + " is not valid. " + extra_comment
 
+            def invalid_category():
+                return "Select a least one category of task"
+
             # Check arguments validity
+            if _options.logfile is None:
+                _options.log = False
+            else:
+                _options.log = True
             if _options.nbtasks is None:
                 _error_found = True
                 _err_msg += missing_opt_message("nbtasks")
@@ -58,13 +70,14 @@ class Argparser:
                 if _options.cat_5:
                     _options.category.append(5)
             else:
-                _options.category= [5]
+                _error_found = True
+                _err_msg += invalid_category()
 
             # check files needed, a best check can be done with file validation content and format.
-            file1 = Path("wallet.json")
-            file2 = Path("iexec.json")
-            file3 = Path("chain.json")
-            if not (file1.is_file() and file2.is_file() and file3.is_file()):
+            file1 = "wallet.json"
+            file2 = "iexec.json"
+            file3 = "chain.json"
+            if not (os.path.exists(file1) and os.path.exists(file2) and os.path.exists(file3)):
                 _err_msg += "\nValid wallet.json, iexec.json, chain.json is needed to use iExec "
                 _error_found = True
 

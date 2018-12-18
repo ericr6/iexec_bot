@@ -105,3 +105,13 @@ venv.bak/
 
 .idea/*
 .idea/vcs.xml
+
+chain.json
+deployed.json
+iexec.json
+unittest/chain.json
+unittest/deployed.json
+unittest/iexec.json
+unittest/wallet.json
+wallet.json
+

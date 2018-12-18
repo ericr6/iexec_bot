@@ -212,7 +212,7 @@ help: https: // slack.iex.ec
     def test_iexec(self):
         cmd = "iexec --version"
         result = Command(cmd).run()
-        self.assertEqual(result.output, '2.2.39\n')
+        self.assertEqual(result.output, '2.3.1\n')
 
     def test_find_nb_order_orderbook(self):
         intext="""('', 'ℹ using chain [kovan]\n- showing orderbook...\n✔ orderbook details:\n- \n  id:

@@ -52,14 +52,14 @@ class Work():
 
 class Orderlist():
 
-    def __init__(self, cat, nbworks=1, simulate=False):
+    def __init__(self, cat, nbworks=1, simulate=False, log=False, logfile=None):
         self.cat = cat
         self.book = []
         self.works = []
         self.nbworks = nbworks
         self.nbworkssubmitted = 0
         self.simulate = simulate
-        self.log = Log("iExecbot.log")
+        self.log = Log(log=log, logfile=logfile)
         self.log.add("Start program to launch " + str(self.nbworks) + "works ")
 
     def update(self):
@@ -92,7 +92,14 @@ class Orderlist():
         for order in self.book:
             self.log.add("try to buy this order" + str(order.show()))
             _work = self.submitorder(order.id)
-            self.log.add("work is " + str(_work))
+            if _work.status == "Started":
+                self.works.append(_work)
+                self.nbworkssubmitted += 1
+                print("https://explorer.iex.ec/kovan/work/" + _work.tx)
+                self.log.add("work is " + str(_work))
+                if self.nbworkssubmitted >= self.nbworks:
+                    self.log.add("all task has been succesfully submitted ... exit ")
+                    self.close()
 
     def submitorder(self, _orderid):
         cmd = "iexec order fill " + _orderid + " --force"
@@ -100,29 +107,16 @@ class Orderlist():
             result = Command(cmd).run()
             # self.log.add("[[[[[" + result.error + result.output +" ]]]]]]")
             work = self.watch(result.error + result.output, _orderid)
-
             if work.status == "Error":
                 self.log.add("!!! submission error " + str(_orderid))
             elif work.status == "Started":
                 self.log.add("\o/ successful  work submission " + str(_orderid))
-                self.works.append(work)
-                self.nbworkssubmitted += 1
-                if self.nbworkssubmitted >= self.nbworks:
-                    self.log.add("all task has been succesfully submitted ... exit ")
-                    self.close()
             else:
                 self.log.add("[[[[[" + result.error + result.output + " ]]]]]]")
                 raise RuntimeError
-
         else:
             work = Work(status="Started")
             self.log.add("Simulate:  " + cmd)
-            self.works.append(work)
-            self.nbworkssubmitted += 1
-            if self.nbworkssubmitted >= self.nbworks:
-                self.log.add("all task has been succesfully submitted ... exit ")
-                self.close()
-
         return work
 
     def show(self):

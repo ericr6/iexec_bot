@@ -1,30 +1,33 @@
 # iexec_bot
 
-Required: 
-python3 
-iexec SDK
-Follow https://github.com/iExecBlockchainComputing/iexec-sdk
+The program manages task submission in iExec marketplace
+It allows to submit many tasks, you can easily submit and monitor hundreds of tasks 
+This wrapper is written in python to allowed future prototype for more advanced usage, 
+as brokering computing resources.
+     
+Requirements: 
+- python 3 
+- iexec SDK: go to https://github.com/iExecBlockchainComputing/iexec-sdk,
+- Alls version 2.x should be supported, tested on 2.2.31 
+- Tested and valideted on Ethereum kovan testnet
 
 
-  
-the program manages task submission in iExec marketplace 
-Tested on kovan 
-
-Exemple of use:
+# Installation and test
 
 1. Install iExec SDK:
 
-Make sure iExec SDK is installed, and has been tested.
-you should have your wallet, you account
-make sure you get enough RLC and few ether
+Make sure iExec SDK is installed and ready to use .
+you should have prepared your wallet, your account and be sure to get enough RLC and ether to 
+Go to docs.iex.ec for more details.
 
 2. Set up your app:
 
 Define the price, the name of your dapp and the name of your image from docker hub.
 The app deployed for the tutorial is a zcash minning software but it can be any applications. 
-The process is the same since you get a docker image.   
+You can use your own docker image from dockerhub, built with the few iExec requirements.   
+
   
-Edit iexec.json
+Edit **iexec.json** to define the work   
 {
   "app": {
     "name": "zcash_nicehash",
@@ -36,7 +39,7 @@ Edit iexec.json
   }
 } 
  
-Deploy you dapp 
+Deploy your decentralized application. 
 ```
 iexec app deploy
 ```     
@@ -45,9 +48,11 @@ iexec app deploy
 ✔ Deployed new app at address 0xb6801d904a022c248f422132009ed430c79cbcd5
 ```     
 
-3. Set up the work to submit: set the description of the work in iexec.json in the working directory. 
+3. Set up the work to submit: 
 
-Edit iexec.json 
+set the description of the work in iexec.json in the working directory. 
+
+Edit iexec.json to describe the dapp and arguments 
 ```
 {
   "order": {
@@ -67,6 +72,7 @@ Edit iexec.json
 ./iexecbot --nbtasks 1 --cat_5   
 
 ./iexecbot --help for more details 
+
 
 5. Validation
 TBD
