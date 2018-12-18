@@ -68,7 +68,9 @@ Edit iexec.json to describe the dapp and arguments
 ```
 
 4. Start the program
- 
+
+Let 's start with submission of1 task of category 5
+
 ./iexecbot --nbtasks 1 --cat_5   
 
 ./iexecbot --help for more details 
